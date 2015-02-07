@@ -1,3 +1,7 @@
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Scanner;
 
 /**
@@ -9,26 +13,49 @@ public class RevServer {
 
 public static void main(String [] args) {
     Field field = new Field();
+    try {
+        ServerSocket ss = new ServerSocket(7777);
+        Socket p1 = ss.accept();
+        System.out.println("Client 1 connected");
+        Socket p2= ss.accept();
+        System.out.println("Client 2 connected");
 
-    Scanner input = new Scanner(System.in);
-    int col;
-    int x;
-    int y;
+        Scanner p1input = new Scanner(p1.getInputStream());
+        Scanner p2input = new Scanner(p2.getInputStream());
 
-    /*field.move(field.checkMove(Square.StatusType.BLACK,2,3),2,3);
-    field.drawField();*/
+        PrintStream p1output = new PrintStream(p1.getOutputStream());
+        PrintStream p2output = new PrintStream(p2.getOutputStream());
 
-    while (true) {
-        System.out.println("Move Color, x,y");
-        col = input.nextInt();
-        x = input.nextInt();
-        y = input.nextInt();
-        if (x > 7 || x < 0 || y > 7 || y < 0) {
-            System.out.println("X and Y must be [0-7]");
-            return;
+        p1output.println("Ваш ход, черные");
+        p2output.println("Ход противника");
+        int col,x,y;
+
+        while (true) {
+            col = p1input.nextInt();
+            x = p1input.nextInt();
+            y = p1input.nextInt();
+
+            System.out.println(col + " " + x + " " + y);
+
+            /*col = p1input.nextInt();
+            x = p1input.nextInt();
+            y = p1input.nextInt();
+            field.move(field.checkMove(Field.fromInt(col),x,y),x,y);
+
+            field.drawField();
+            col = p2input.nextInt();
+            x = p2input.nextInt();
+            y = p2input.nextInt();
+            field.move(field.checkMove(Field.fromInt(col),x,y),x,y);
+
+            field.drawField();*/
+
         }
-        field.move(field.checkMove(Field.fromInt(col),x,y),x,y);
-        field.drawField();
+
+
+
+    } catch (IOException e) {
+        e.printStackTrace();
     }
 
 
