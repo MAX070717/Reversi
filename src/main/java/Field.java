@@ -140,11 +140,13 @@ public class Field {
     }
 
 
-    public void move(List<Square> toBeat, int x, int y)
+    public boolean move(List<Square> toBeat, int x, int y)
     {
+        if (toBeat.isEmpty()) return false;
         for (Square enemySquare : toBeat)
             enemySquare.setStatus(Square.invertStatus(enemySquare.getStatus()));
         field[x][y].setStatus(toBeat.get(0).getStatus());
+        return true;
     }
 
 
